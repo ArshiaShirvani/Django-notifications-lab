@@ -12,7 +12,7 @@ def send_notification(request):
         footer = request.POST.get("footer", "")
         msg_type = request.POST.get("message_type", "info")
 
-        # پیام را در قالب دیکشنری JSON می‌سازیم
+       
         msg_content = json.dumps({
             "title": title,
             "text": text,
