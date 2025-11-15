@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نمایش نوتیفیکیشن</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notiflix/dist/notiflix-3.2.6.min.css">
+<script src="https://cdn.jsdelivr.net/npm/notiflix/dist/notiflix-aio-3.2.6.min.js"></script>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@30.1.0/dist/font-face.css" rel="stylesheet" />
+
+<style>
+body { font-family: 'Vazir', sans-serif; padding: 50px; background-color: #f9f9f9; direction: rtl; }
+h1 { text-align: center; margin-bottom: 40px; }
+.section-title { font-size: 1.3rem; margin-bottom: 20px; font-weight: 600; text-align: center; }
+.btn-custom { margin: 5px; font-weight: bold; width: 120px; transition: 0.3s; }
+.btn-custom:hover { transform: translateY(-2px); }
+.form-section { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 50px; }
+.notification-row { display: flex; justify-content: space-around; margin-bottom: 30px; flex-wrap: wrap; }
+.notification-column { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 30%; min-width: 200px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>نمایش نوتیفیکیشن</h1>
+
+<!-- فرم ارسال پیام -->
+<div class="section form-section">
+  <div class="section-title">ارسال پیام سفارشی</div>
+  <form method="POST" action="{% url 'website:send_notification' %}">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="title" class="form-label">عنوان پیام</label>
+      <input type="text" class="form-control" id="title" name="title" placeholder="عنوان پیام" required>
+    </div>
+    <div class="mb-3">
+      <label for="messageText" class="form-label">متن پیام</label>
+      <input type="text" class="form-control" id="messageText" name="message" placeholder="متن پیام" required>
+    </div>
+    <div class="mb-3">
+      <label for="footer" class="form-label">پاورقی (اختیاری)</label>
+      <input type="text" class="form-control" id="footer" name="footer" placeholder="متن پایین modal">
+    </div>
+    <div class="mb-3">
+      <label for="messageType" class="form-label">نوع پیام</label>
+      <select class="form-select" id="messageType" name="message_type" required>
+        <option value="success">موفقیت</option>
+        <option value="error">خطا</option>
+        <option value="warning">هشدار</option>
+        <option value="info">اطلاع</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary btn-custom">ارسال پیام</button>
+  </form>
+</div>
+
+<!-- Playground نوتیفیکیشن -->
+<div class="notification-row">
+  <div class="notification-column">
+    <div class="section-title">Notiflix</div>
+    <button class="btn btn-success btn-custom" onclick="showNotiflix('success')">Success</button>
+    <button class="btn btn-danger btn-custom" onclick="showNotiflix('error')">Error</button>
+    <button class="btn btn-warning btn-custom" onclick="showNotiflix('warning')">Warning</button>
+    <button class="btn btn-info btn-custom" onclick="showNotiflix('info')">Info</button>
+  </div>
+
+  <div class="notification-column">
+    <div class="section-title">Toastify</div>
+    <button class="btn btn-success btn-custom" onclick="showToastify('success')">Success</button>
+    <button class="btn btn-danger btn-custom" onclick="showToastify('error')">Error</button>
+    <button class="btn btn-warning btn-custom" onclick="showToastify('warning')">Warning</button>
+    <button class="btn btn-info btn-custom" onclick="showToastify('info')">Info</button>
+  </div>
+
+  <div class="notification-column">
+    <div class="section-title">SweetAlert2</div>
+    <button class="btn btn-success btn-custom" onclick="showSweet('success')">Success</button>
+    <button class="btn btn-danger btn-custom" onclick="showSweet('error')">Error</button>
+    <button class="btn btn-warning btn-custom" onclick="showSweet('warning')">Warning</button>
+    <button class="btn btn-info btn-custom" onclick="showSweet('info')">Info</button>
+  </div>
+</div>
+</div>
+
+<script>
+function showNotiflix(type, message=null){
+  const msg = message || "این پیام " + type + " از Notiflix است";
+  switch(type){
+    case 'success': Notiflix.Notify.success(msg, {position:'left-top'}); break;
+    case 'error': Notiflix.Notify.failure(msg, {position:'left-top'}); break;
+    case 'warning': Notiflix.Notify.warning(msg, {position:'left-top'}); break;
+    case 'info': Notiflix.Notify.info(msg, {position:'left-top'}); break;
+  }
+}
+
+function showToastify(type, message=null){
+  const msg = message || "این پیام " + type + " از Toastify است";
+  Toastify({
+    text: msg,
+    duration:3000,
+    gravity:"top",
+    position:"right",
+    backgroundColor: type==='success'?"#4CAF50": type==='error'?"#f44336": type==='warning'?"#ff9800":"#2196f3"
+  }).showToast();
+}
+
+function showSweet(type, message={}){
+  Swal.fire({
+    icon: type==='error'?'error':type==='warning'?'warning':type==='info'?'info':'success',
+    title: message.title || (type.charAt(0).toUpperCase()+type.slice(1)),
+    text: message.text || ("این پیام " + type + " از SweetAlert2 است"),
+    footer: message.footer || "",
+    confirmButtonText: 'تایید'
+  });
+}
+
+
+{% if messages %}
+  {% for message in messages %}
+    const msgObj = JSON.parse('{{ message|escapejs }}');
+    const type = msgObj.type || 'info';
+    const text = msgObj.text || '';
+    const title = msgObj.title || '';
+    const footer = msgObj.footer || '';
+
+    showNotiflix(type, text);
+    showToastify(type, text);
+    showSweet(type, {title:title, text:text, footer:footer});
+  {% endfor %}
+{% endif %}
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
