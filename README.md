@@ -15,8 +15,7 @@ The project provides:
 
 ```
 core/               # Main Django project
-templates/          # HTML templates including notification demos
-website/            # Static files (JS / CSS) for notification libraries
+templates/          # HTML templates including notification demos and (JS / CSS) files
 requirements.txt    # Python dependencies
 manage.py           # Django management script
 ```
@@ -60,7 +59,6 @@ You can explore templates that demonstrate various notification libraries.
 You can:
 
 - Inspect HTML templates to see how each notification library is integrated.
-- Review JavaScript files under `website/` to understand how notifications are triggered.
 - Add new notification libraries and compare differences in styling, UX, and integration complexity.
 - Use this project as a boilerplate for implementing toasts/alerts in real Django applications.
 
